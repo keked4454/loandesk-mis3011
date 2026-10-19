@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Prioritize 100 bank customers for a personal loan campaign. Rank the customer cohort and estimate individual acceptance probabilities.">
+  <title>LoanDesk — Campaign Workbench</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <aside class="rail">
+    <a class="brand" href="#"><span class="brand-mark">L<span>↗</span></span>LoanDesk</a>
+    <div class="rail-label">MARKETING WORKSPACE</div>
+    <a class="nav-link active" href="#campaign"><span>◫</span> Loan campaign</a>
+    <a class="nav-link" href="#customer-form"><span>＋</span> Customer predictor</a>
+    <a class="nav-link" href="#evaluation"><span>◷</span> Historical results</a>
+    <div class="rail-bottom"><span class="status-dot"></span> Personal loans<br><small>MIS3011 · Assignment 1</small></div>
+  </aside>
+  <main id="campaign">
+    <header class="topbar"><span>Campaign workspace <span class="slash">/</span> <strong>Personal loans</strong></span><span class="cohort-badge">TEST COHORT · 1,000 CUSTOMERS</span></header>
+    <div class="content">
+      <section class="intro">
+        <div><div class="eyebrow">MAKE EVERY CALL COUNT</div><h1>Your next 100 calls.</h1><p>Find the customers most likely to accept a personal loan.<br class="desktop-only"> A focused call list, powered by your trained model.</p></div>
+        <button id="download" class="button primary" disabled><span aria-hidden="true">↓</span> Export call list <span class="button-count">100</span></button>
+      </section>
+      <noscript><p class="error-banner">Enable JavaScript to calculate customer probabilities and view the call list.</p></noscript>
+      <div id="load-error" class="error-banner" role="alert" hidden><span id="load-error-message"></span><button id="retry-load" class="button retry-button" type="button">Retry loading</button></div>
+      <section class="stats" aria-label="Campaign summary">
+        <article class="stat"><span class="stat-label">Call budget</span><strong>100<span class="stat-unit">calls</span></strong><span class="stat-note">10% of the customer cohort</span></article>
+        <article class="stat"><span class="stat-label">Customers ranked</span><strong id="ranked-count">—</strong><span class="stat-note">Scored in your browser</span></article>
+        <article class="stat"><span class="stat-label">Average priority score</span><strong id="priority-score">—</strong><span class="stat-note">Across your top 100 customers</span></article>
+        <article class="stat accent"><span class="stat-label">Expected acceptances</span><strong id="expected-count">—</strong><span class="stat-note">Model estimate · not observed outcomes</span></article>
+      </section>
+      <div class="workspace">
+        <section class="panel customers-panel" aria-labelledby="customers-title">
+          <div class="panel-title"><div><h2 id="customers-title">Customer priorities</h2><p>Highest probability first. Select a customer to inspect.</p></div><span class="small-tag">NN MODEL</span></div>
+          <div class="list-controls"><div class="tabs" role="group" aria-label="Customer list"><button class="tab active" id="priority-tab" aria-pressed="true">Priority 100</button><button class="tab" id="all-tab" aria-pressed="false">All customers</button></div><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search customer ID" aria-label="Search customer ID"></label></div>
+          <div class="table-scroll"><table><thead><tr><th scope="col">Rank</th><th scope="col">Customer</th><th scope="col">Income <span>($k/yr)</span></th><th scope="col">Education</th><th scope="col" class="probability-col">Acceptance probability</th></tr></thead><tbody id="customer-rows"><tr><td colspan="5" class="empty">Loading and verifying the customer cohort…</td></tr></tbody></table></div>
+          <div class="pagination"><span id="list-count" aria-live="polite">Preparing your call list</span><div><button id="prev" class="page-button" aria-label="Previous page" disabled>←</button><span id="page-label">—</span><button id="next" class="page-button" aria-label="Next page" disabled>→</button></div></div>
+          <p class="list-note"><span class="priority-dot"></span>Ranks 1–100 make up the recommended call list. Rankings use predicted probabilities only.</p>
+        </section>
+        <section class="panel predictor-panel" id="customer-form" aria-labelledby="predictor-title">
+          <div class="panel-title"><div><div class="eyebrow">SINGLE CUSTOMER</div><h2 id="predictor-title">Check a probability</h2><p>Enter the customer's details, or select a row from the list.</p></div></div>
+          <form id="predict-form">
+            <div class="form-grid">
+              <label>Age<input name="Age" type="number" min="1" step="1" required placeholder="e.g. 45"></label>
+              <label>Family size<select name="Family" required><option value="">Select</option><option value="1">1 person</option><option value="2">2 people</option><option value="3">3 people</option><option value="4">4 people</option></select></label>
+              <label>Annual income ($k)<input name="Income" type="number" min="0" step="any" required placeholder="e.g. 120"></label>
+              <label>Card spending ($k/mo)<input name="CCAvg" type="number" min="0" step="any" required placeholder="e.g. 2.5"></label>
+              <label class="full-width">Education<select name="Education" required><option value="">Select education</option><option value="1">1 · Undergraduate</option><option value="2">2 · Graduate</option><option value="3">3 · Advanced / Professional</option></select></label>
+              <label class="full-width">Mortgage balance ($k)<input name="Mortgage" type="number" min="0" step="any" required placeholder="0 if no mortgage"></label>
+              <label>Securities account<select name="Securities Account" required><option value="">Select</option><option value="0">No</option><option value="1">Yes</option></select></label>
+              <label>CD account<select name="CD Account" required><option value="">Select</option><option value="0">No</option><option value="1">Yes</option></select></label>
+              <label>Online banking<select name="Online" required><option value="">Select</option><option value="0">No</option><option value="1">Yes</option></select></label>
+              <label>Bank credit card<select name="CreditCard" required><option value="">Select</option><option value="0">No</option><option value="1">Yes</option></select></label>
+            </div>
+            <p class="unit-note">$k means thousands of dollars: enter 120 for $120,000. Card spending is monthly; income is annual.</p>
+            <button id="predict-button" class="button primary full-width" type="submit" disabled>Calculate probability <span aria-hidden="true">↗</span></button>
+            <button id="reset-form" class="reset-button" type="button">Clear details</button>
+            <p id="prediction-hint" class="unit-note" role="status" hidden>Details changed. Calculate again to see an updated probability.</p>
+          </form>
+          <div id="prediction" class="prediction" role="status" aria-live="polite" hidden><span id="prediction-caption">Estimated loan acceptance</span><strong id="prediction-value">—</strong><p id="prediction-note"></p></div>
+        </section>
+      </div>
+      <details class="panel historical" id="evaluation"><summary><div><span class="eyebrow">BACKTEST</span><h2>What happened in the historical test set?</h2></div><span class="details-arrow" aria-hidden="true">＋</span></summary><div class="historical-content"><p>Actual outcomes are used here to evaluate the fixed models. They are never used to rank customers or predict new customers.</p><div class="table-scroll"><table><thead><tr><th scope="col">Model</th><th scope="col">Test AUC</th><th scope="col">Accepted / 100 calls</th></tr></thead><tbody id="evaluation-rows"></tbody></table></div><p id="backtest-note" class="list-note"></p></div></details>
+      <footer class="verification"><div><span id="check-icon" class="check-icon">…</span><div><strong id="check-title">Checking prediction consistency</strong><p id="check-detail" aria-live="polite">Comparing every browser prediction with the Python reference.</p></div></div><a href="model_nn.json" download>Model export ↗</a></footer>
+      <div class="fine-print">LoanDesk · Personal loan campaign planning <span>Educational test data · Probabilities are estimates, not guarantees.</span></div>
+    </div>
+  </main>
+</body>
+</html>

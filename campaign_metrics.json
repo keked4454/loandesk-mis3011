@@ -1,0 +1,24 @@
+{
+  "table_a": [
+    {
+      "Model": "Random calls",
+      "Test AUC": 0.5,
+      "Accepted, out of 100 calls": 10
+    },
+    {
+      "Model": "Logistic regression, 10 features",
+      "Test AUC": 0.968,
+      "Accepted, out of 100 calls": 78
+    },
+    {
+      "Model": "Logistic regression + engineered",
+      "Test AUC": 0.98,
+      "Accepted, out of 100 calls": 85
+    },
+    {
+      "Model": "Neural network",
+      "Test AUC": 0.993,
+      "Accepted, out of 100 calls": 95
+    }
+  ]
+}
